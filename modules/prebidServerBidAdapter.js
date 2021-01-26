@@ -2,7 +2,7 @@ import Adapter from 'src/adapter';
 import bidfactory from 'src/bidfactory';
 import * as utils from 'src/utils';
 import { ajax } from 'src/ajax';
-import { STATUS, S2S, EVENTS } from 'src/constants';
+import constants from 'src/constants';
 import { cookieSet } from 'src/cookie.js';
 import adaptermanager from 'src/adaptermanager';
 import { config } from 'src/config';
@@ -13,7 +13,7 @@ import includes from 'core-js/library/fn/array/includes';
 
 const getConfig = config.getConfig;
 
-const TYPE = S2S.SRC;
+const TYPE = constants.S2S.SRC;
 let _synced = false;
 const DEFAULT_S2S_TTL = 60;
 const DEFAULT_S2S_CURRENCY = 'USD';
@@ -385,7 +385,7 @@ const LEGACY_PROTOCOL = {
         result.bids.forEach(bidObj => {
           const bidRequest = utils.getBidRequest(bidObj.bid_id, bidderRequests);
           const cpm = bidObj.price;
-          const status = cpm !== 0 ? STATUS.GOOD : STATUS.NO_BID;
+          const status = cpm !== 0 ? constants.STATUS.GOOD : constants.STATUS.NO_BID;
           let bidObject = bidfactory.createBid(status, bidRequest);
 
           bidObject.source = TYPE;
@@ -594,7 +594,7 @@ const OPEN_RTB_PROTOCOL = {
           );
 
           const cpm = bid.price;
-          const status = cpm !== 0 ? STATUS.GOOD : STATUS.NO_BID;
+          const status = cpm !== 0 ? constants.STATUS.GOOD : constants.STATUS.NO_BID;
           let bidObject = bidfactory.createBid(status, bidRequest);
 
           bidObject.source = TYPE;
@@ -720,7 +720,7 @@ export function PrebidServer() {
         }
       });
 
-      bidderRequests.forEach(bidderRequest => events.emit(EVENTS.BIDDER_DONE, bidderRequest));
+      bidderRequests.forEach(bidderRequest => events.emit(constants.EVENTS.BIDDER_DONE, bidderRequest));
 
       if (result.status === 'no_cookie' && _s2sConfig.cookieSet && typeof _s2sConfig.cookieSetUrl === 'string') {
         // cookie sync
